@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mascotas Perdidas Colombia — Terremoto 2026",
+  title: "Mascotas Perdidas en Terremoto de Colombia 2026",
   description:
     "Publica y busca mascotas perdidas o encontradas tras el terremoto en Chocó, Antioquia, Valle del Cauca, Cauca, Risaralda, Quindío y Caldas.",
 };
