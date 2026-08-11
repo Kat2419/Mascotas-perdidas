@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { FiltrosBar } from '@/components/filtros-bar'
+import { FiltrosToggle } from '@/components/filtros-toggle'
 import { PublicacionCard } from '@/components/publicacion-card'
 import { Paginacion } from '@/components/paginacion'
 import { PUBLICACIONES_POR_PAGINA } from '@/lib/constants'
@@ -45,7 +46,9 @@ export default async function Home(props: PageProps<'/'>) {
 
       <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6">
         <aside className="order-2 sm:order-none sm:sticky sm:top-20 sm:self-start bg-white/70 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl p-4">
-          <FiltrosBar defaults={{ departamento, ciudad, tipo, mascota }} />
+          <FiltrosToggle>
+            <FiltrosBar defaults={{ departamento, ciudad, tipo, mascota }} />
+          </FiltrosToggle>
         </aside>
 
         <div className="order-1 sm:order-none flex flex-col gap-6 min-w-0">
