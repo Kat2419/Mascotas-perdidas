@@ -72,6 +72,8 @@ create table if not exists public.publicaciones (
   ciudad text not null,
   direccion_referencia text,
   contacto_whatsapp text,
+  lat double precision,
+  lng double precision,
   created_at timestamptz not null default now()
 );
 

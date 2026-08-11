@@ -23,6 +23,8 @@ export type Publicacion = {
   ciudad: string
   direccion_referencia: string | null
   contacto_whatsapp: string | null
+  lat: number | null
+  lng: number | null
   created_at: string
   profiles?: Pick<Profile, 'nombre' | 'avatar_url'> | null
 }

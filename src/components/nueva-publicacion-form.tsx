@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
   DEPARTAMENTOS,
   DEPARTAMENTOS_CIUDADES,
@@ -10,11 +11,24 @@ import {
 import { crearPublicacion, type EstadoPublicar } from '@/lib/actions/publicaciones'
 import { ImageUploader } from '@/components/image-uploader'
 
+const UbicacionPicker = dynamic(
+  () => import('@/components/ubicacion-picker').then((m) => m.UbicacionPicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 w-full rounded-md border border-black/15 dark:border-white/15 flex items-center justify-center text-sm opacity-60">
+        Cargando mapa…
+      </div>
+    ),
+  }
+)
+
 const estadoInicial: EstadoPublicar = undefined
 
 export function NuevaPublicacionForm() {
   const [estado, formAction, pending] = useActionState(crearPublicacion, estadoInicial)
   const [departamento, setDepartamento] = useState('')
+  const [ciudad, setCiudad] = useState('')
   const ciudades = departamento ? DEPARTAMENTOS_CIUDADES[departamento] ?? [] : []
 
   return (
@@ -99,7 +113,10 @@ export function NuevaPublicacionForm() {
             name="departamento"
             required
             value={departamento}
-            onChange={(e) => setDepartamento(e.target.value)}
+            onChange={(e) => {
+              setDepartamento(e.target.value)
+              setCiudad('')
+            }}
             className="rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm"
           >
             <option value="" disabled>
@@ -122,6 +139,8 @@ export function NuevaPublicacionForm() {
             name="ciudad"
             required
             disabled={!departamento}
+            value={ciudad}
+            onChange={(e) => setCiudad(e.target.value)}
             className="rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm disabled:opacity-50"
           >
             <option value="" disabled>
@@ -148,6 +167,11 @@ export function NuevaPublicacionForm() {
           placeholder="Ej: cerca al parque principal, barrio El Jardín…"
           className="rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm"
         />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <span className="text-sm font-medium">Marcar ubicación en el mapa (opcional)</span>
+        <UbicacionPicker departamento={departamento} ciudad={ciudad} />
       </div>
 
       <div className="flex flex-col gap-1">

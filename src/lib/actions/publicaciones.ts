@@ -50,6 +50,10 @@ export async function crearPublicacion(
     String(formData.get('direccion_referencia') ?? '').trim() || null
   const contactoWhatsapp = String(formData.get('contacto_whatsapp') ?? '').trim() || null
   const fotoUrl = String(formData.get('foto_url') ?? '').trim() || null
+  const latRaw = String(formData.get('lat') ?? '').trim()
+  const lngRaw = String(formData.get('lng') ?? '').trim()
+  const lat = latRaw ? Number(latRaw) : null
+  const lng = lngRaw ? Number(lngRaw) : null
 
   if (!TIPOS_PUBLICACION.some((t) => t.valor === tipo)) {
     return { error: 'Selecciona si la mascota está perdida o fue encontrada.' }
@@ -90,6 +94,8 @@ export async function crearPublicacion(
       ciudad,
       direccion_referencia: direccionReferencia,
       contacto_whatsapp: contactoWhatsapp,
+      lat,
+      lng,
       foto_url: fotoUrl,
       foto_moderada: Boolean(fotoUrl),
     })

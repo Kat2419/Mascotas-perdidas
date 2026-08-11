@@ -7,6 +7,7 @@ import { WhatsappShareButton } from '@/components/whatsapp-share-button'
 import { ReportButton } from '@/components/report-button'
 import { MarcarReunidoButton } from '@/components/marcar-reunido-button'
 import { RespuestaForm } from '@/components/respuesta-form'
+import { UbicacionMapa } from '@/components/ubicacion-mapa'
 
 const ETIQUETA_TIPO_MASCOTA: Record<string, string> = {
   perro: 'Perro',
@@ -118,6 +119,10 @@ export default async function PublicacionPage(props: PageProps<'/publicaciones/[
               <dd className="text-sm mt-0.5 whitespace-pre-line">{pub.descripcion}</dd>
             </div>
           </dl>
+
+          {pub.lat != null && pub.lng != null && (
+            <UbicacionMapa lat={pub.lat} lng={pub.lng} />
+          )}
 
           {pub.contacto_whatsapp && (
             <a
