@@ -44,11 +44,11 @@ export default async function Home(props: PageProps<'/'>) {
       <h1 className="text-2xl font-bold mb-6">Mascotas perdidas y encontradas</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6">
-        <aside className="sm:sticky sm:top-20 sm:self-start bg-white/70 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl p-4">
+        <aside className="order-2 sm:order-none sm:sticky sm:top-20 sm:self-start bg-white/70 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl p-4">
           <FiltrosBar defaults={{ departamento, ciudad, tipo, mascota }} />
         </aside>
 
-        <div className="flex flex-col gap-6 min-w-0">
+        <div className="order-1 sm:order-none flex flex-col gap-6 min-w-0">
           {publicaciones.length === 0 ? (
             <div className="rounded-xl border border-dashed border-black/15 dark:border-white/15 py-16 text-center text-sm opacity-60">
               No hay publicaciones con estos filtros todavía.
