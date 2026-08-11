@@ -1,69 +1,73 @@
-import Image from "next/image";
+import { createClient } from '@/lib/supabase/server'
+import { FiltrosBar } from '@/components/filtros-bar'
+import { PublicacionCard } from '@/components/publicacion-card'
+import { Paginacion } from '@/components/paginacion'
+import { PUBLICACIONES_POR_PAGINA } from '@/lib/constants'
+import type { Publicacion } from '@/lib/types'
 
-export default function Home() {
+export default async function Home(props: PageProps<'/'>) {
+  const sp = await props.searchParams
+  const get = (key: string) => {
+    const v = sp[key]
+    return Array.isArray(v) ? v[0] ?? '' : v ?? ''
+  }
+
+  const departamento = get('dep')
+  const ciudad = get('ciudad')
+  const mascota = get('mascota')
+  const tipo = get('tipo')
+  const pagina = Math.max(1, Number(get('page')) || 1)
+
+  const supabase = await createClient()
+
+  let query = supabase
+    .from('publicaciones')
+    .select('*, profiles(nombre, avatar_url)', { count: 'exact' })
+    .order('estado', { ascending: true }) // 'activa' antes que 'reunido'/'cerrada' alfabéticamente
+    .order('created_at', { ascending: false })
+
+  if (departamento) query = query.eq('departamento', departamento)
+  if (ciudad) query = query.eq('ciudad', ciudad)
+  if (mascota) query = query.eq('tipo_mascota', mascota)
+  if (tipo) query = query.eq('tipo', tipo)
+
+  const desde = (pagina - 1) * PUBLICACIONES_POR_PAGINA
+  const hasta = desde + PUBLICACIONES_POR_PAGINA - 1
+  query = query.range(desde, hasta)
+
+  const { data, count } = await query
+  const publicaciones = (data ?? []) as Publicacion[]
+  const hayMas = count != null ? hasta + 1 < count : publicaciones.length === PUBLICACIONES_POR_PAGINA
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+      <h1 className="text-2xl font-bold mb-6">Mascotas perdidas y encontradas</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6">
+        <aside className="sm:sticky sm:top-20 sm:self-start bg-white/70 dark:bg-black/20 border border-black/10 dark:border-white/10 rounded-xl p-4">
+          <FiltrosBar defaults={{ departamento, ciudad, tipo, mascota }} />
+        </aside>
+
+        <div className="flex flex-col gap-6 min-w-0">
+          {publicaciones.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-black/15 dark:border-white/15 py-16 text-center text-sm opacity-60">
+              No hay publicaciones con estos filtros todavía.
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
+              {publicaciones.map((p) => (
+                <PublicacionCard key={p.id} publicacion={p} />
+              ))}
+            </div>
+          )}
+
+          <Paginacion
+            paginaActual={pagina}
+            hayMas={hayMas}
+            searchParams={{ dep: departamento, ciudad, mascota, tipo }}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
-  );
+  )
 }
