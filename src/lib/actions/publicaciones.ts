@@ -63,6 +63,9 @@ export async function crearPublicacion(
   if (!esCiudadValida(departamento, ciudad)) {
     return { error: 'Selecciona un departamento y ciudad válidos.' }
   }
+  if (!contactoWhatsapp) {
+    return { error: 'Escribe un número de WhatsApp de contacto para que te puedan avisar.' }
+  }
 
   if (fotoUrl) {
     const moderacion = await moderarImagen(fotoUrl)

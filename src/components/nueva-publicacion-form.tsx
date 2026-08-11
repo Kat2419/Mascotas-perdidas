@@ -152,12 +152,13 @@ export function NuevaPublicacionForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="contacto_whatsapp" className="text-sm font-medium">
-          WhatsApp de contacto (opcional pero recomendado)
+          WhatsApp de contacto
         </label>
         <input
           id="contacto_whatsapp"
           name="contacto_whatsapp"
           type="tel"
+          required
           placeholder="Ej: 3001234567"
           maxLength={20}
           className="rounded-md border border-black/15 dark:border-white/15 bg-transparent px-3 py-2 text-sm"
