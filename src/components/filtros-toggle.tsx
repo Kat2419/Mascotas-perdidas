@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react'
 
 export function FiltrosToggle({ children }: { children: ReactNode }) {
-  const [abierto, setAbierto] = useState(true)
+  const [abierto, setAbierto] = useState(false)
 
   return (
     <div>
