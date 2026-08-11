@@ -28,9 +28,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
         <Header />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-black/10 dark:border-white/10 py-6 text-center text-xs opacity-60">
-          Iniciativa comunitaria para ayudar a reunir mascotas con sus familias tras el terremoto. No afiliada a ninguna entidad gubernamental.
-        </footer>
       </body>
     </html>
   );

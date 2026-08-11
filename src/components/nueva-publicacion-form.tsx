@@ -33,10 +33,24 @@ export function NuevaPublicacionForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-5 max-w-xl">
-      <fieldset className="flex gap-4">
+      <fieldset className="grid grid-cols-2 gap-3">
         {TIPOS_PUBLICACION.map((t, i) => (
-          <label key={t.valor} className="flex items-center gap-2 text-sm">
-            <input type="radio" name="tipo" value={t.valor} defaultChecked={i === 0} required />
+          <label
+            key={t.valor}
+            className={`cursor-pointer rounded-lg border-2 px-4 py-3 text-center text-sm font-semibold transition-colors border-black/15 dark:border-white/15 ${
+              t.valor === 'perdido'
+                ? 'has-[:checked]:border-red-600 has-[:checked]:bg-red-600 has-[:checked]:text-white'
+                : 'has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-600 has-[:checked]:text-white'
+            }`}
+          >
+            <input
+              type="radio"
+              name="tipo"
+              value={t.valor}
+              defaultChecked={i === 0}
+              required
+              className="sr-only"
+            />
             {t.valor === 'perdido' ? 'Se me perdió' : 'La encontré / la tengo'}
           </label>
         ))}
